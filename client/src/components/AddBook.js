@@ -28,7 +28,7 @@ function AddBook() {
   const [name, setName] = useState("");
   const [genre, setGenre] = useState("");
   const [authorId, setAuthorId] = useState("");
-  const [addBook, { data }] = useMutation(ADD_BOOK_MUTATION);
+  const [addBook] = useMutation(ADD_BOOK_MUTATION);
 
   return (
     <form
