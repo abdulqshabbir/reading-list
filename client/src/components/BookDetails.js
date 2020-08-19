@@ -12,7 +12,7 @@ function BookDetails({ id }) {
   if (error) return `Error: ${error.message}`;
   if (data) {
     return (
-      <div>
+      <div id="book-details">
         <h2>{data.book.name}</h2>
         <p>{data.book.genre}</p>
         <p>{data.book.author.name}</p>
