@@ -1,11 +1,13 @@
-const express = require("express");
-const { graphqlHTTP } = require("express-graphql");
+const { ApolloServer, gql } = require("apollo-server");
 const schema = require("./schema/schema");
 const mongoose = require("mongoose");
-const cors = require("cors");
-const app = express();
+const { typeDefs, resolvers } = require("./queries");
 
-app.use(cors());
+const server = new ApolloServer({ typeDefs, resolvers, cors: true });
+
+server.listen().then(({ url }) => {
+  console.log(`Server is ready at ${url}`);
+});
 
 mongoose.connect(
   "mongodb://abdulqshabbir:test123@ds219983.mlab.com:19983/reading-list",
@@ -17,15 +19,4 @@ mongoose.connect(
 
 mongoose.connection.once("open", () => {
   console.log("connected to database");
-});
-
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema,
-  })
-);
-
-app.listen(4000, () => {
-  console.log("listening for requests on port 4000");
 });

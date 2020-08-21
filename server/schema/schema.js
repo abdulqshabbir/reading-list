@@ -6,6 +6,7 @@ const {
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
+  buildSchema,
 } = require("graphql");
 
 const Book = require("../models/book");
