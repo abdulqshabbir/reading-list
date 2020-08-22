@@ -38,8 +38,8 @@ export const GET_BOOK = gql`
 `;
 
 export const ADD_BOOK_MUTATION = gql`
-  mutation addBook($name: String!, $genre: String!, $authorId: ID!) {
-    addBook(name: $name, genre: $genre, authorId: $authorId) {
+  mutation($name: String!, $genre: String!, $authorId: ID!) {
+    createBook(name: $name, genre: $genre, authorId: $authorId) {
       name
       id
     }

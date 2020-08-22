@@ -7,6 +7,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     age: Int!
+    books: [Book] # add resolvers for this field
   }
 
   type Book {
@@ -14,6 +15,7 @@ const typeDefs = gql`
     name: String!
     genre: String!
     authorId: ID!
+    author: Author # add resolver for this field
   }
   type Query {
     book(id: ID!): Book
@@ -28,9 +30,23 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
+  Book: {
+    author: async (parent, args) => {
+      const authorId = parent.authorId;
+      const author = await Author.findById(authorId);
+      return author;
+    },
+  },
+  Author: {
+    books: async (parent, args) => {
+      const author = parent;
+      const books = await Book.find();
+      return books.filter((book) => book.authorId === author.id);
+    },
+  },
   Query: {
     book: async (parent, args, context, info) => {
-      return Book.findById(args.id);
+      return await Book.findById(args.id);
     },
     books: async () => {
       return await Book.find();
@@ -44,18 +60,12 @@ const resolvers = {
   },
   Mutation: {
     createBook: async (parent, args) => {
-      return await new Book({
+      const book = await new Book({
         name: args.name,
         genre: args.genre,
         authorId: args.authorId,
       }).save();
-    },
-    createAuthor: async (parent, args) => {
-      const author = new Author({
-        name: args.name,
-        age: args.age,
-      });
-      return await author.save();
+      return book;
     },
   },
 };

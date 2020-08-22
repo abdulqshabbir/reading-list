@@ -20,6 +20,12 @@ code {
   height: 100%;
 }
 
+#book-list-container {
+  color: #444;
+  text-align: left;
+  padding: 20px;
+}
+
 #book-list {
   padding: 0;
 }
@@ -75,7 +81,7 @@ form button {
   left: 10px;
 }
 
-#book-details {
+#book-details-container {
   position: fixed;
   top: 0;
   right: 0;

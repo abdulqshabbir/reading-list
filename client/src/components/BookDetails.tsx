@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@apollo/client";
 import { GET_BOOK } from "../queries";
 import Book from "../types/book";
+import { Dimmer, Loader } from "semantic-ui-react";
 
 interface Props {
   id: string;
@@ -24,12 +25,18 @@ function BookDetails({ id }: Props) {
       },
     }
   );
-  if (loading) return "Loading...";
-  if (error) return `Error: ${error.message}`;
+  if (loading)
+    return (
+      <div id="book-details-container">
+        <Dimmer active>
+          <Loader>Loading</Loader>
+        </Dimmer>
+      </div>
+    );
   if (data) {
     const { book } = data;
     return (
-      <div id="book-details">
+      <div id="book-details-container">
         <h2>{book.name}</h2>
         <p>{book.genre}</p>
         <p>{book.author.name}</p>
