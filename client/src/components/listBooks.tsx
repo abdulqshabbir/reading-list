@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_BOOKS } from "../queries";
-import BookDetails from "./BookDetails";
-import { Dimmer, Loader } from "semantic-ui-react";
+import BookDetails from "./showBook";
+import { Loader } from "semantic-ui-react";
+import Book from "../types/book";
 
 function BookList() {
-  const { loading, error, data } = useQuery(GET_BOOKS);
-  const [bookId, setBookId] = useState(null);
+  const { loading, error, data } = useQuery<TData>(GET_BOOKS);
+  const [bookId, setBookId] = useState<string | null>(null);
 
   if (loading)
     return (
       <div id="book-list-container">
-        <Dimmer active>
-          <Loader>Loading</Loader>
-        </Dimmer>
+        <Loader active inline>
+          Loading
+        </Loader>
       </div>
     );
 
-  if (error || data === undefined) return null;
+  if (error || data === undefined)
+    return "Sorry your books could not be found.";
 
   if (data.books.length === 0)
     return (
@@ -44,6 +46,10 @@ function BookList() {
       {bookId !== null ? <BookDetails id={bookId} /> : null}
     </div>
   );
+}
+
+interface TData {
+  books: Book[];
 }
 
 export default BookList;

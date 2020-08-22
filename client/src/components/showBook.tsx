@@ -4,28 +4,12 @@ import { GET_BOOK } from "../queries";
 import Book from "../types/book";
 import { Dimmer, Loader } from "semantic-ui-react";
 
-interface Props {
-  id: string;
-}
-
-interface QueryData {
-  book: Book;
-}
-
-interface QueryVariables {
-  id: string;
-}
-
 function BookDetails({ id }: Props) {
   const { loading, error, data } = useQuery<QueryData, QueryVariables>(
     GET_BOOK,
-    {
-      variables: {
-        id: id,
-      },
-    }
+    { variables: { id: id } }
   );
-  if (loading)
+  if (loading || error)
     return (
       <div id="book-details-container">
         <Dimmer active>
@@ -51,6 +35,18 @@ function BookDetails({ id }: Props) {
   } else {
     return <div>No book selected...</div>;
   }
+}
+
+interface Props {
+  id: string;
+}
+
+interface QueryData {
+  book: Book;
+}
+
+interface QueryVariables {
+  id: string;
 }
 
 export default BookDetails;

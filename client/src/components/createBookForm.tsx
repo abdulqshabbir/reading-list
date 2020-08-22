@@ -1,18 +1,31 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_AUTHORS, ADD_BOOK_MUTATION, GET_BOOKS } from "../queries";
+import Author from "../types/author";
 
 function AuthorOptions() {
-  const { loading, data } = useQuery(GET_AUTHORS);
+  const { loading, data } = useQuery<TAuthors>(GET_AUTHORS);
+
   if (loading) return <option disabled>Loading Authors...</option>;
-  return data.authors.map((author) => (
-    <option key={author.id} value={author.id}>
-      {author.name}
-    </option>
-  ));
+
+  if (!data) return <option disabled>Error Fetching Authors...</option>;
+
+  return (
+    <React.Fragment>
+      {data.authors.map((author) => (
+        <option key={author.id}>{author.name}</option>
+      ))}
+    </React.Fragment>
+  );
 }
 
-function SubmitForm(e, name, genre, authorId, addBook) {
+function SubmitForm(
+  e: React.FormEvent<HTMLFormElement>,
+  name: string,
+  genre: string,
+  authorId: string,
+  addBook: any
+) {
   e.preventDefault();
   addBook({
     variables: {
@@ -40,7 +53,7 @@ function AddBook() {
         setName("");
       }}
     >
-      <div className="field" name="book">
+      <div className="field">
         <label>Book name: </label>
         <input
           type="text"
@@ -48,7 +61,7 @@ function AddBook() {
           value={name}
         />
       </div>
-      <div className="field" name="genre">
+      <div className="field">
         <label>Genre: </label>
         <input
           type="text"
@@ -70,6 +83,10 @@ function AddBook() {
       <button>+</button>
     </form>
   );
+}
+
+interface TAuthors {
+  authors: Author[];
 }
 
 export default AddBook;
