@@ -1,0 +1,37 @@
+.formContainer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
+
+.form {
+  box-sizing: border-box;
+  padding: 0 20px;
+  width: 400px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.formField {
+  height: 50px;
+}
+
+.formError {
+  color: var(--red-main);
+  text-align: left;
+}
+
+.buttonWrapper {
+  padding-left: 10%;
+}
+
+.button {
+  color: #fff;
+  font-size: 2em;
+  background: var(--red-main);
+  border: 0px;
+  padding: 0 10px;
+  cursor: pointer;
+  border-radius: 50%;
+}

@@ -69,50 +69,10 @@ code {
   background-color: var(--red-main);
 }
 
-form {
-  background: #eee;
-  padding: 20px;
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 600px;
-}
-
-form .field {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 10px;
-}
-
-form label {
-  text-align: right;
-  padding: 6px;
-}
-
 .error {
   color: var(--red-main);
   text-align: right;
   margin-left: 150px;
-}
-
-form select,
-form input {
-  margin: 4px;
-  padding: 6px;
-  box-sizing: border-box;
-}
-
-form button {
-  color: #fff;
-  font-size: 2em;
-  background: var(--red-main);
-  border: 0px;
-  padding: 0 10px;
-  cursor: pointer;
-  border-radius: 50%;
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
 }
 
 #book-details-container {

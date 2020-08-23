@@ -4,14 +4,14 @@ import "./App.css";
 
 // components
 import BookList from "./components/listBooks.tsx";
-import AddBook from "./components/createBookForm";
+import CreateBookForm from "./components/createBookForm";
 
 function App() {
   return (
     <div id="main-container">
       <h1>Abdul's Reading List</h1>
       <BookList />
-      <AddBook />
+      <CreateBookForm />
     </div>
   );
 }
