@@ -1,56 +1,35 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_AUTHORS, ADD_BOOK_MUTATION, GET_BOOKS } from "../queries";
+import { GET_AUTHORS, CREATE_BOOK_MUTATION, GET_BOOKS } from "../queries";
 import Author from "../types/author";
-
-function AuthorOptions() {
-  const { loading, data } = useQuery<TAuthors>(GET_AUTHORS);
-
-  if (loading) return <option disabled>Loading Authors...</option>;
-
-  if (!data) return <option disabled>Error Fetching Authors...</option>;
-
-  return (
-    <React.Fragment>
-      {data.authors.map((author) => (
-        <option key={author.id}>{author.name}</option>
-      ))}
-    </React.Fragment>
-  );
-}
-
-function SubmitForm(
-  e: React.FormEvent<HTMLFormElement>,
-  name: string,
-  genre: string,
-  authorId: string,
-  addBook: any
-) {
-  e.preventDefault();
-  addBook({
-    variables: {
-      name,
-      genre,
-      authorId,
-    },
-    refetchQueries: [{ query: GET_BOOKS }],
-  });
-}
 
 function AddBook() {
   const [name, setName] = useState("");
   const [genre, setGenre] = useState("");
-  const [authorId, setAuthorId] = useState("");
-  const [addBook] = useMutation(ADD_BOOK_MUTATION);
+  const [authorId, setAuthorId] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [addBook] = useMutation(CREATE_BOOK_MUTATION);
 
   return (
     <form
       id="add-book"
       onSubmit={(e) => {
-        SubmitForm(e, name, genre, authorId, addBook);
-        setGenre("");
-        setAuthorId("");
-        setName("");
+        e.preventDefault();
+        if (authorId !== "" && name !== "" && genre !== "") {
+          SubmitForm(e, name, genre, authorId, addBook);
+          setGenre("");
+          setAuthorId("");
+          setName("");
+        } else {
+          // error in fields submitted
+          if (name === "") {
+            setErrorMessage("Please  input book name.");
+          } else if (genre === "") {
+            setErrorMessage("Please input book genre.");
+          } else {
+            setErrorMessage("Please select author.");
+          }
+        }
       }}
     >
       <div className="field">
@@ -71,14 +50,13 @@ function AddBook() {
       </div>
       <div className="field">
         <label>Author: </label>
-        <select
-          name="author"
-          onChange={(e) => setAuthorId(e.target.value)}
-          value={authorId}
-        >
+        <select name="author" onChange={(e) => setAuthorId(e.target.value)}>
           <option>Please choose an option</option>
           <AuthorOptions />
         </select>
+      </div>
+      <div className="field">
+        <p className="error">{errorMessage}</p>
       </div>
       <button>+</button>
     </form>
@@ -88,5 +66,38 @@ function AddBook() {
 interface TAuthors {
   authors: Author[];
 }
+function AuthorOptions() {
+  const { loading, data } = useQuery<TAuthors>(GET_AUTHORS);
 
+  if (loading) return <option disabled>Loading Authors...</option>;
+
+  if (!data) return <option disabled>Error Fetching Authors...</option>;
+
+  return (
+    <React.Fragment>
+      {data.authors.map((author) => (
+        <option key={author.id} value={author.id}>
+          {author.name}
+        </option>
+      ))}
+    </React.Fragment>
+  );
+}
+
+function SubmitForm(
+  e: React.FormEvent<HTMLFormElement>,
+  name: string,
+  genre: string,
+  authorId: string,
+  addBook: any
+) {
+  addBook({
+    variables: {
+      name,
+      genre,
+      authorId,
+    },
+    refetchQueries: [{ query: GET_BOOKS }],
+  });
+}
 export default AddBook;

@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { useQuery } from "@apollo/client";
-import { GET_BOOKS } from "../queries";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_BOOKS, DELETE_BOOK_MUTATION } from "../queries";
 import BookDetails from "./showBook";
 import { Loader } from "semantic-ui-react";
 import Book from "../types/book";
 
 function BookList() {
-  const { loading, error, data } = useQuery<TData>(GET_BOOKS);
+  const { loading, error, data } = useQuery<TQueryData>(GET_BOOKS);
+  const [deleteBook] = useMutation<TMutationData, TMutationVariables>(
+    DELETE_BOOK_MUTATION
+  );
   const [bookId, setBookId] = useState<string | null>(null);
 
   if (loading)
@@ -33,14 +36,28 @@ function BookList() {
       <h3>My books:</h3>
       <ul id="book-list">
         {data.books.map((book) => (
-          <li
-            key={book.id}
-            onClick={(e) => {
-              setBookId(book.id);
-            }}
-          >
-            {book.name}
-          </li>
+          <div className="book-list-element" key={book.id}>
+            <li
+              key={book.id}
+              onClick={(e) => {
+                setBookId(book.id);
+              }}
+            >
+              {book.name}
+            </li>
+            <button
+              onClick={(e) =>
+                deleteBook({
+                  variables: {
+                    id: book.id,
+                  },
+                  refetchQueries: [{ query: GET_BOOKS }],
+                })
+              }
+            >
+              x
+            </button>
+          </div>
         ))}
       </ul>
       {bookId !== null ? <BookDetails id={bookId} /> : null}
@@ -48,8 +65,16 @@ function BookList() {
   );
 }
 
-interface TData {
+interface TQueryData {
   books: Book[];
+}
+
+interface TMutationData {
+  book: Book;
+}
+
+interface TMutationVariables {
+  id: string;
 }
 
 export default BookList;

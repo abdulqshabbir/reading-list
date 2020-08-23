@@ -7,7 +7,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     age: Int!
-    books: [Book] # add resolvers for this field
+    books: [Book]
   }
 
   type Book {
@@ -15,16 +15,20 @@ const typeDefs = gql`
     name: String!
     genre: String!
     authorId: ID!
-    author: Author # add resolver for this field
+    author: Author
   }
   type Query {
     book(id: ID!): Book
     books: [Book]
     author(id: ID!): Author
-    authors: [Author] #resolver
+    authors: [Author]
   }
   type Mutation {
+    # book mutations
     createBook(name: String!, genre: String!, authorId: ID!): Book
+    deleteBook(id: ID!): Book
+
+    # author mutations
     createAuthor(name: String!, age: Int!): Author
   }
 `;
@@ -66,6 +70,10 @@ const resolvers = {
         authorId: args.authorId,
       }).save();
       return book;
+    },
+    deleteBook: async (parent, args) => {
+      const bookToDelete = await Book.findByIdAndDelete(args.id);
+      return bookToDelete;
     },
   },
 };

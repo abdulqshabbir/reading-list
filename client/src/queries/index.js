@@ -37,9 +37,18 @@ export const GET_BOOK = gql`
   }
 `;
 
-export const ADD_BOOK_MUTATION = gql`
+export const CREATE_BOOK_MUTATION = gql`
   mutation($name: String!, $genre: String!, $authorId: ID!) {
     createBook(name: $name, genre: $genre, authorId: $authorId) {
+      name
+      id
+    }
+  }
+`;
+
+export const DELETE_BOOK_MUTATION = gql`
+  mutation($id: ID!) {
+    deleteBook(id: $id) {
       name
       id
     }

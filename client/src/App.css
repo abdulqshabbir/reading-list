@@ -1,3 +1,7 @@
+:root {
+  --red-main: #880e4f;
+}
+
 body {
   background: #eee;
   font-family: Arial, Helvetica, sans-serif;
@@ -30,15 +34,39 @@ code {
   padding: 0;
 }
 
-#book-list li {
+#book-list .book-list-element {
   display: inline-block;
   margin: 12px;
   padding: 10px;
   border-radius: 4px;
-  border: 1px solid #880e4f;
+  border: 1px solid var(--red-main);
   box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+  color: var(--red-main);
+}
+
+#book-list li {
+  display: inline-block;
+  padding: 5px;
+  color: var(--red-main);
   cursor: pointer;
-  color: #880e4f;
+}
+
+#book-list button {
+  display: inline-block;
+  padding: 5px 10px;
+  color: var(--red-main);
+  border: none;
+  cursor: pointer;
+}
+
+#book-list button:hover {
+  display: inline-block;
+  color: white;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
+  background-color: var(--red-main);
 }
 
 form {
@@ -47,7 +75,7 @@ form {
   position: fixed;
   left: 0;
   bottom: 0;
-  width: 400px;
+  width: 600px;
 }
 
 form .field {
@@ -61,6 +89,12 @@ form label {
   padding: 6px;
 }
 
+.error {
+  color: var(--red-main);
+  text-align: right;
+  margin-left: 150px;
+}
+
 form select,
 form input {
   margin: 4px;
@@ -71,7 +105,7 @@ form input {
 form button {
   color: #fff;
   font-size: 2em;
-  background: #ad1457;
+  background: var(--red-main);
   border: 0px;
   padding: 0 10px;
   cursor: pointer;
@@ -87,7 +121,7 @@ form button {
   right: 0;
   height: 100%;
   width: 40%;
-  background-color: #ad1457;
+  background-color: var(--red-main);
   padding: 30px;
   box-shadow: -2px -3px 5px rgba(0, 0, 0, 0.3);
   color: white;

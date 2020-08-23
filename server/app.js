@@ -1,5 +1,4 @@
 const { ApolloServer, gql } = require("apollo-server");
-const schema = require("./schema/schema");
 const mongoose = require("mongoose");
 const { typeDefs, resolvers } = require("./queries");
 
