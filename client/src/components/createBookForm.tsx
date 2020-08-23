@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_AUTHORS, CREATE_BOOK_MUTATION, GET_BOOKS } from "../queries";
-import { Form } from "semantic-ui-react";
+import { Form, Button } from "semantic-ui-react";
 import styles from "./createBookForm.module.css";
 import Author from "../types/author";
 
@@ -63,7 +63,7 @@ function CreateBookForm() {
           <p className={styles.formError}>{errorMessage}</p>
         </Form.Field>
         <Form.Field className={`${styles.buttonWrapper} ${styles.formField}}`}>
-          <button className={styles.button}>+</button>
+          <Button>Create Book</Button>
         </Form.Field>
       </Form>
     </div>

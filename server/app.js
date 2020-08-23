@@ -1,21 +1,40 @@
-const { ApolloServer, gql } = require("apollo-server");
+const { ApolloServer, gql } = require("apollo-server-express");
+const express = require("express");
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
-const { typeDefs, resolvers } = require("./queries");
+const typeDefs = require("./schema");
+const resolvers = require("./resolvers");
 
-const server = new ApolloServer({ typeDefs, resolvers, cors: true });
+const startServer = async () => {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req, res }) => ({ req, res }),
+  });
 
-server.listen().then(({ url }) => {
-  console.log(`Server is ready at ${url}`);
-});
+  await mongoose.connect(
+    "mongodb://abdulqshabbir:test123@ds219983.mlab.com:19983/reading-list",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  );
 
-mongoose.connect(
-  "mongodb://abdulqshabbir:test123@ds219983.mlab.com:19983/reading-list",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+  console.log("conntected to database");
 
-mongoose.connection.once("open", () => {
-  console.log("connected to database");
-});
+  const app = express();
+
+  app.use(cookieParser());
+
+  app.use((req, res, next) => {
+    next();
+  });
+
+  server.applyMiddleware({ app });
+
+  app.listen({ port: 4000 }, () => {
+    console.log("Server is listening at http://localhost:4000");
+  });
+};
+
+startServer();

@@ -3,6 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { GET_BOOKS, DELETE_BOOK_MUTATION } from "../queries";
 import BookDetails from "./showBook";
 import { Loader } from "semantic-ui-react";
+import styles from "./listBooks.module.css";
 import Book from "../types/book";
 
 function BookList() {
@@ -14,7 +15,7 @@ function BookList() {
 
   if (loading)
     return (
-      <div id="book-list-container">
+      <div className={styles.bookListContainer}>
         <Loader active inline>
           Loading
         </Loader>
@@ -26,13 +27,13 @@ function BookList() {
 
   if (data.books.length === 0)
     return (
-      <div id="book-list-container">
+      <div className={styles.bookListContainer}>
         <h2>"Add some books to your reading list!"</h2>
       </div>
     );
 
   return (
-    <div id="book-list-container">
+    <div className={styles.bookListContainer}>
       <h3>My books:</h3>
       <ul id="book-list">
         {data.books.map((book) => (

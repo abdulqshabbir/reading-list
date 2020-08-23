@@ -69,12 +69,6 @@ code {
   background-color: var(--red-main);
 }
 
-.error {
-  color: var(--red-main);
-  text-align: right;
-  margin-left: 150px;
-}
-
 #book-details-container {
   position: fixed;
   top: 0;
