@@ -4,6 +4,8 @@ const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const typeDefs = require("./schema");
 const resolvers = require("./resolvers");
+const cors = require("cors");
+const { MONGO_DB_URI } = require("./config");
 
 const startServer = async () => {
   const server = new ApolloServer({
@@ -12,17 +14,14 @@ const startServer = async () => {
     context: ({ req, res }) => ({ req, res }),
   });
 
-  await mongoose.connect(
-    "mongodb://abdulqshabbir:test123@ds219983.mlab.com:19983/reading-list",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  );
-
-  console.log("conntected to database");
+  await mongoose.connect(MONGO_DB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
   const app = express();
+
+  app.use(cors({ origin: "http://localhost:3000/", credentials: true }));
 
   app.use(cookieParser());
 

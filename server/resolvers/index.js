@@ -1,8 +1,10 @@
 const Author = require("../models/author");
 const Book = require("../models/book");
 const User = require("../models/user");
+
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require("../config");
 
 const resolvers = {
   Book: {
@@ -45,6 +47,42 @@ const resolvers = {
     deleteBook: async (parent, args) => {
       const bookToDelete = await Book.findByIdAndDelete(args.id);
       return bookToDelete;
+    },
+    login: async (_, { email, password }, { req, res }) => {
+      // check for user in database
+      const user = await User.findOne({ email: email });
+
+      if (user) {
+        const validUser = await bcrypt.compare(password, user.password);
+
+        // user password entered and hashed password do not match
+        if (!validUser) {
+          return null;
+        }
+
+        // user correctly logged in, so store userId as token
+        const accessToken = await jwt.sign(
+          { userId: user.id },
+          ACCESS_TOKEN_SECRET,
+          { expiresIn: "15min" }
+        );
+        const refreshToken = await jwt.sign(
+          { userId: user.id },
+          REFRESH_TOKEN_SECRET,
+          { expiresIn: "7d" }
+        );
+
+        res.cookie("access-token", accessToken, {
+          expires: new Date(Date.now() + 60 * 60 * 15),
+        });
+        res.cookie("refresh-token", refreshToken, {
+          expires: new Date(Date.now() + 60 * 60 * 24 * 7),
+        });
+
+        return validUser;
+      } else {
+        return null;
+      }
     },
     register: async (_, { email, password }, { req }) => {
       // check for user in database

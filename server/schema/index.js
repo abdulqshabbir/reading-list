@@ -17,9 +17,9 @@ const typeDefs = gql`
   }
 
   type User {
-    id: ID!
-    email: String!
-    password: String!
+    id: ID
+    email: String
+    password: String
   }
 
   type Query {
@@ -39,6 +39,7 @@ const typeDefs = gql`
 
     # user login/register mutations
     register(email: String!, password: String!): User
+    login(email: String!, password: String!): User
   }
 `;
 
