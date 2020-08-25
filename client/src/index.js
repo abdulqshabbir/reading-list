@@ -11,6 +11,9 @@ import {
 const link = createHttpLink({
   uri: "http://localhost:4000/graphql",
   credentials: "include",
+  fetchOptions: {
+    mode: "no-cors",
+  },
 });
 
 // apollo client setup
