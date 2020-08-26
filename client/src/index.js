@@ -10,16 +10,13 @@ import {
 
 const link = createHttpLink({
   uri: "http://localhost:4000/graphql",
-  credentials: "include",
-  fetchOptions: {
-    mode: "no-cors",
-  },
 });
 
 // apollo client setup
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   // enable sending cookies over cross-origin requests
+  credentials: "include",
   link,
 });
 

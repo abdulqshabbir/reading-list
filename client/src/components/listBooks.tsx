@@ -22,9 +22,11 @@ function BookList() {
       </div>
     );
 
-  if (error || data === undefined)
+  if (error || data === undefined) {
+    console.log("error", error);
+    console.log("data", data);
     return "Sorry your books could not be found.";
-
+  }
   if (data.books.length === 0)
     return (
       <div className={styles.bookListContainer}>

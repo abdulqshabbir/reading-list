@@ -27,7 +27,7 @@ const startServer = async () => {
   // parse application/json
   app.use(bodyParser.json());
 
-  app.use(cors({ credentials: true, origin: "localhost:3000" }));
+  app.use(cors({ credentials: true, origin: "*" }));
 
   app.use(cookieParser());
 
