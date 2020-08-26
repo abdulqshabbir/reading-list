@@ -5,6 +5,7 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require("../config");
+const ACCESS_TOKEN = "access-token";
 
 const resolvers = {
   Book: {
@@ -48,18 +49,39 @@ const resolvers = {
       const bookToDelete = await Book.findByIdAndDelete(args.id);
       return bookToDelete;
     },
-    login: async (_, { email, password }, { req, res }) => {
-      // check for user in database
-      const user = await User.findOne({ email: email });
+    // logout: (_, __, { req, res }) => {
+    //   // destroy cookie which authenticates user
+    //   const accessToken = req["access-token"];
+    //   const refreshToken = req["refresh-token"];
 
+    //   res.cookie(ACCESS_TOKEN, accessToken, { expires: new Date.now() });
+    //   res.cookie(REFRESH_TOKEN, refreshToken, { expires: new Date.now() });
+
+    //   if (accessToken && refreshToken) {
+    //     return true;
+    //   }
+    //   return false;
+    // },
+    login: async (_, { email, password }, { req, res }) => {
+      // if user is already logged in, return the current user
+      const token = req["access-token"];
+
+      if (req["access-token"]) {
+        const decodedUser = jwt.verify(token, ACCESS_TOKEN_SECRET);
+
+        if (decodedUser) {
+          return decodedUser;
+        }
+      }
+
+      // otherwise, check for user in database
+      const user = await User.findOne({ email: email });
       if (user) {
         const validUser = await bcrypt.compare(password, user.password);
-
         // user password entered and hashed password do not match
         if (!validUser) {
           return null;
         }
-
         // user correctly logged in, so store userId as token
         const accessToken = await jwt.sign(
           { userId: user.id },
@@ -72,7 +94,7 @@ const resolvers = {
           { expiresIn: "7d" }
         );
 
-        res.cookie("access-token", accessToken, {
+        res.cookie(ACCESS_TOKEN, accessToken, {
           expires: new Date(Date.now() + 60 * 60 * 15),
         });
         res.cookie("refresh-token", refreshToken, {

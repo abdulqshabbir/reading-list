@@ -21,21 +21,23 @@ const startServer = async () => {
   });
 
   const app = express();
-  // parse application/x-www-form-urlencoded
-  app.use(bodyParser.urlencoded({ extended: false }));
 
-  // parse application/json
+  // parse application/json requests
   app.use(bodyParser.json());
 
+  // allow cookies and requests from any origin
   app.use(cors({ credentials: true, origin: "*" }));
 
+  // parse cookie
   app.use(cookieParser());
 
   app.use((req, res, next) => {
+    req["access-token"] = req.cookies["access-token"];
+    req["refresh-token"] = req.cookies["refresh -token"];
     next();
   });
 
-  server.applyMiddleware({ app, cors: true });
+  server.applyMiddleware({ app, cors: { origin: "*" } });
 
   app.listen({ port: 4000 }, () => {
     console.log("Server is listening at http://localhost:4000");
