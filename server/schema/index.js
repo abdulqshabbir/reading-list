@@ -18,8 +18,8 @@ const typeDefs = gql`
 
   type User {
     id: ID!
-    email: String
-    password: String
+    email: String!
+    password: String!
   }
 
   type Query {
