@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require("../config");
 const ACCESS_TOKEN = "access-token";
+const REFRESH_TOKEN = "refresh-token";
 
 const resolvers = {
   Book: {
@@ -49,28 +50,37 @@ const resolvers = {
       const bookToDelete = await Book.findByIdAndDelete(args.id);
       return bookToDelete;
     },
-    // logout: (_, __, { req, res }) => {
-    //   // destroy cookie which authenticates user
-    //   const accessToken = req["access-token"];
-    //   const refreshToken = req["refresh-token"];
+    logout: async (_, __, { req, res }) => {
+      const accessToken = req["access-token"];
+      const refreshToken = req["refresh-token"];
 
-    //   res.cookie(ACCESS_TOKEN, accessToken, { expires: new Date.now() });
-    //   res.cookie(REFRESH_TOKEN, refreshToken, { expires: new Date.now() });
+      // no user is logged in
+      if (!accessToken || !refreshToken) {
+        return false;
+      }
 
-    //   if (accessToken && refreshToken) {
-    //     return true;
-    //   }
-    //   return false;
-    // },
+      // if cookie is present, verify user
+      const decodedUser = jwt.verify(accessToken, ACCESS_TOKEN_SECRET);
+      const user = await User.findById(decodedUser.userId);
+      console.log("user", user);
+      if (user) {
+        res.clearCookie("access-token");
+        res.clearCookie("refresh-token");
+        return true;
+      }
+      return false;
+    },
     login: async (_, { email, password }, { req, res }) => {
-      // if user is already logged in, return the current user
+      debugger;
       const token = req["access-token"];
-
-      if (req["access-token"]) {
+      // user is already logged in with access-token
+      if (token) {
         const decodedUser = jwt.verify(token, ACCESS_TOKEN_SECRET);
-
-        if (decodedUser) {
-          return decodedUser;
+        const user = await User.findById(decodedUser.userId);
+        if (user) {
+          return user;
+        } else {
+          return null;
         }
       }
 
@@ -112,7 +122,7 @@ const resolvers = {
 
       // if no user, register user
       if (!user) {
-        // hash user password
+        // hash and salt user password
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
 

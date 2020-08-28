@@ -17,7 +17,7 @@ const typeDefs = gql`
   }
 
   type User {
-    id: ID
+    id: ID!
     email: String
     password: String
   }
@@ -41,6 +41,7 @@ const typeDefs = gql`
     register(email: String!, password: String!): User
     login(email: String!, password: String!): User
     # logout(): Boolean!
+    logout: Boolean!
   }
 `;
 
