@@ -1,7 +1,6 @@
 const Author = require("../models/author");
 const Book = require("../models/book");
 const User = require("../models/user");
-
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require("../config");
@@ -36,6 +35,14 @@ const resolvers = {
     authors: async () => {
       return await Author.find();
     },
+    me: async (_, __, { req }) => {
+      if (!req.session.userId) {
+        // no user logged in
+        return null;
+      }
+      const user = await User.findById(req.session.userId);
+      return user;
+    },
   },
   Mutation: {
     createBook: async (parent, args) => {
@@ -51,32 +58,32 @@ const resolvers = {
       return bookToDelete;
     },
     logout: async (_, __, { req, res }) => {
-      const accessToken = req["access-token"];
+      return new Promise((resolve) =>
+        req.session.destroy((err) => {
+          // if access-token is present, decode user
+          const token = req["access-token"];
 
-      // no user is logged in
-      if (!accessToken) {
-        return false;
-      }
-
-      // if cookie is present, verify user
-      const decodedUser = jwt.verify(accessToken, ACCESS_TOKEN_SECRET);
-      const user = await User.findById(decodedUser.userId);
-      console.log("user", user);
-      if (user) {
-        res.clearCookie("access-token");
-        res.clearCookie("refresh-token");
-        return true;
-      }
-      return false;
+          if (token) {
+            // clear cookies from browser
+            res.clearCookie("access-token");
+            res.clearCookie("refresh-token");
+            res.clearCookie("qid");
+          }
+          if (err) {
+            console.log(err);
+            resolve(false);
+            return;
+          }
+          resolve(true);
+        })
+      );
     },
     login: async (_, { email, password }, { req, res }) => {
       const token = req["access-token"];
-      console.log("token", token);
       // user is already logged in with access-token
       if (token) {
         const decodedUser = jwt.verify(token, ACCESS_TOKEN_SECRET);
         const user = await User.findById(decodedUser.userId);
-        console.log("user", user);
         if (user) {
           return user;
         } else {
@@ -92,7 +99,6 @@ const resolvers = {
         if (!isValidUser) {
           return null;
         }
-        console.log("valid user", isValidUser);
         // user correctly logged in, so store userId as token
         const accessToken = jwt.sign({ userId: user.id }, ACCESS_TOKEN_SECRET, {
           expiresIn: "15min",
@@ -109,6 +115,11 @@ const resolvers = {
         res.cookie(REFRESH_TOKEN, refreshToken, {
           expires: new Date(Date.now() + 60 * 60 * 24 * 7),
         });
+
+        req.session.userId = user.id;
+
+        console.log(req.session);
+
         return user;
       } else {
         return null;

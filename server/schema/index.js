@@ -28,6 +28,7 @@ const typeDefs = gql`
     author(id: ID!): Author
     authors: [Author]!
     user: User
+    me: User
   }
   type Mutation {
     # book mutations
