@@ -9,7 +9,6 @@ import { MikroORM } from 'mikro-orm'
 import mongo from 'connect-mongo'
 import mikroORMConfig from './mikro-orm.config'
 import { buildSchema } from 'type-graphql'
-import { Books } from './entities/Books';
 import { BookResolver } from './resolvers/Book'
 
 const MongoStore = mongo(session);
@@ -54,7 +53,7 @@ const startServer = async () => {
       resolvers: [BookResolver],
       validate: false
     }),
-    context: ({ req, res }) => ({ req, res }),
+    context: () => ({ em: orm.em }),
   });
 
   server.applyMiddleware({ app, cors: { origin: "*" } });
