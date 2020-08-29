@@ -1,6 +1,6 @@
 {
   "data": {
-    "className": "Book",
+    "className": "Author",
     "properties": {
       "_id": {
         "name": "_id",
@@ -35,34 +35,27 @@
         "setter": false,
         "type": "string"
       },
-      "genre": {
-        "name": "genre",
+      "age": {
+        "name": "age",
         "reference": "scalar",
         "getter": false,
         "setter": false,
-        "type": "string"
-      },
-      "authorId": {
-        "name": "authorId",
-        "reference": "scalar",
-        "getter": false,
-        "setter": false,
-        "type": "string"
+        "type": "number"
       }
     },
     "hooks": {},
     "indexes": [],
     "uniques": [],
-    "path": "./src/entities/Book.ts",
-    "name": "Book",
+    "path": "./src/entities/Author.ts",
+    "name": "Author",
     "constructorParams": [],
     "toJsonParams": [],
     "useCache": true,
     "serializedPrimaryKey": "id",
     "primaryKeys": ["_id"],
     "compositePK": false,
-    "collection": "book"
+    "collection": "author"
   },
-  "origin": "./src/entities/Book.ts",
-  "hash": "d9051fd45cd9f2f6d04e51b9a29cb5eb"
+  "origin": "./src/entities/Author.ts",
+  "hash": "d6ad343234ec2300300c50e0cf6d7d5e"
 }

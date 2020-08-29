@@ -1,9 +1,10 @@
 import { Book } from "./entities/Book";
+import { Author } from './entities/Author'
 import config from './config'
 import { MikroORM } from "mikro-orm";
 
 export default {
-    entities: [Book],
+    entities: [Book, Author],
     dbName: "reading-list",
     type: "mongo",
     clientUrl: config.MONGO_DB_URI,

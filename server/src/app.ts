@@ -10,6 +10,7 @@ import mongo from 'connect-mongo'
 import mikroORMConfig from './mikro-orm.config'
 import { buildSchema } from 'type-graphql'
 import { BookResolver } from './resolvers/Book'
+import { AuthorResolver } from './resolvers/Author';
 
 const MongoStore = mongo(session);
 
@@ -50,7 +51,7 @@ const startServer = async () => {
 
   const server = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [BookResolver],
+      resolvers: [BookResolver, AuthorResolver],
       validate: false
     }),
     context: () => ({ em: orm.em }),
