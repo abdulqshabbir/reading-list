@@ -2,14 +2,16 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "start": "nodemon app.js"
+    "typescript": "tsc --w",
+    "start": "nodemon --exec ts-node src/app.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/mongodb": "^3.5.26",
     "apollo-server": "^2.16.1",
     "apollo-server-express": "^2.16.1",
     "bcrypt": "^5.0.0",
@@ -22,9 +24,24 @@
     "graphql": "^15.3.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
-    "mongoose": "^5.10.0"
+    "mikro-orm": "^3.6.15",
+    "mongodb": "^3.6.0",
+    "mongoose": "^5.10.0",
+    "type-graphql": "^1.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "@types/cookie-parser": "^1.4.2",
+    "@types/express-session": "^1.17.0",
+    "@types/node": "^14.6.1",
+    "nodemon": "^2.0.4",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.2"
+  },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./src/mikro-orm.config.ts",
+      "./dist/mikro-orm.config.js"
+    ]
   }
 }

@@ -1,6 +1,7 @@
-const { gql } = require("apollo-server-express");
+import { gql } from "apollo-server-express";
+import { DocumentNode } from "graphql";
 
-const typeDefs = gql`
+const typeDefs: DocumentNode = gql`
   type Author {
     id: ID!
     name: String!
@@ -46,4 +47,4 @@ const typeDefs = gql`
   }
 `;
 
-module.exports = typeDefs;
+export default typeDefs

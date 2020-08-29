@@ -1,20 +1,23 @@
-const { ApolloServer, gql } = require("apollo-server-express");
-const express = require("express");
-const cookieParser = require("cookie-parser");
-const mongoose = require("mongoose");
-const typeDefs = require("./schema");
-const resolvers = require("./resolvers");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const { MONGO_DB_URI } = require("./config");
-const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
+import { ApolloServer } from 'apollo-server-express'
+import express from "express";
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import bodyParser from 'body-parser'
+import config from './config'
+import session from 'express-session'
+import { MikroORM } from 'mikro-orm'
+import mongo from 'connect-mongo'
+import mikroORMConfig from './mikro-orm.config'
+import { buildSchema } from 'type-graphql'
+import { Books } from './entities/Books';
+import { BookResolver } from './resolvers/Book'
+
+const MongoStore = mongo(session);
 
 const startServer = async () => {
-  await mongoose.connect(MONGO_DB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  // set up mikroORM
+
+  const orm = await MikroORM.init(mikroORMConfig);
 
   const app = express();
 
@@ -25,7 +28,7 @@ const startServer = async () => {
       saveUninitialized: false, // don't create session until something stored
       resave: false, //don't save session if unmodified
       store: new MongoStore({
-        mongooseConnection: mongoose.connection,
+        url: config.MONGO_DB_URI,
         touchAfter: 24 * 60 * 60, // 1 day
       }),
     })
@@ -40,15 +43,17 @@ const startServer = async () => {
   // parse cookie
   app.use(cookieParser());
 
-  app.use((req, res, next) => {
+  app.use((req: any, _, next) => {
     req["access-token"] = req.cookies["access-token"];
     req["refresh-token"] = req.cookies["refresh -token"];
     next();
   });
 
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    schema: await buildSchema({
+      resolvers: [BookResolver],
+      validate: false
+    }),
     context: ({ req, res }) => ({ req, res }),
   });
 
@@ -59,4 +64,4 @@ const startServer = async () => {
   });
 };
 
-startServer();
+startServer().catch(e => console.error(e));

@@ -9,33 +9,34 @@ const REFRESH_TOKEN = "refresh-token";
 
 const resolvers = {
   Book: {
-    author: async (parent, args) => {
+    author: async (parent: any) => {
       const authorId = parent.authorId;
       const author = await Author.findById(authorId);
       return author;
     },
   },
   Author: {
-    books: async (parent, args) => {
+    books: async (parent: any) => {
       const author = parent;
       const books = await Book.find();
-      return books.filter((book) => book.authorId === author.id);
+      return books.filter((book: any) => book.authorId === author.id);
     },
   },
   Query: {
-    book: async (parent, args, context, info) => {
+    book: async (_: any, args: any) => {
       return await Book.findById(args.id);
     },
     books: async () => {
       return await Book.find();
     },
-    author: async (parent, args) => {
+    author: async (_: any, args: any) => {
       return Author.findById(args.id);
     },
     authors: async () => {
       return await Author.find();
     },
-    me: async (_, __, { req }) => {
+    me: async (_: any, __: any, ctx: any) => {
+      const req = ctx.req
       if (!req.session.userId) {
         // no user logged in
         return null;
@@ -45,7 +46,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    createBook: async (parent, args) => {
+    createBook: async (_: any, args: any) => {
       const book = await new Book({
         name: args.name,
         genre: args.genre,
@@ -53,13 +54,15 @@ const resolvers = {
       }).save();
       return book;
     },
-    deleteBook: async (parent, args) => {
+    deleteBook: async (_: any, args: any) => {
       const bookToDelete = await Book.findByIdAndDelete(args.id);
       return bookToDelete;
     },
-    logout: async (_, __, { req, res }) => {
+    logout: async (_: any, __: any, ctx: any) => {
+      const req = ctx.req
+      const res = ctx.res
       return new Promise((resolve) =>
-        req.session.destroy((err) => {
+        req.session.destroy((err: any) => {
           // if access-token is present, decode user
           const token = req["access-token"];
 
@@ -78,7 +81,13 @@ const resolvers = {
         })
       );
     },
-    login: async (_, { email, password }, { req, res }) => {
+    login: async (_: any, args: any, ctx: any) => {
+
+      const email = args.email
+      const password = args.password
+      const req = ctx.req
+      const res = ctx.res
+
       const token = req["access-token"];
       // user is already logged in with access-token
       if (token) {
@@ -125,7 +134,10 @@ const resolvers = {
         return null;
       }
     },
-    register: async (_, { email, password }, { req }) => {
+    register: async (_: any, args: any, ctx: any) => {
+      const email = args.email
+      const password = args.password
+
       // check for user in database
       const user = await User.findOne({ email: email });
 
@@ -139,11 +151,10 @@ const resolvers = {
         const newUser = await new User({ email: email, password: hash }).save();
         return newUser;
       }
-
       // if user exists, return null
       return null;
-    },
-  },
+    }
+  }
 };
 
-module.exports = resolvers;
+export default resolvers
