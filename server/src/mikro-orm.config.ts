@@ -5,7 +5,7 @@ import { MikroORM } from "mikro-orm";
 
 export default {
     entities: [Book, Author],
-    dbName: "reading-list",
+    dbName: "reading",
     type: "mongo",
     clientUrl: config.MONGO_DB_URI,
     entitiesDirsTs: ["./src/entities"],
