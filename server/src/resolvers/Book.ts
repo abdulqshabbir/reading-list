@@ -1,6 +1,7 @@
 import { Resolver, Mutation, Query, Arg, Ctx } from 'type-graphql'
 import { Book } from '../entities/Book'
 import { MyContext } from 'src/types'
+import { Author } from '../entities/Author'
 
 @Resolver()
 export class BookResolver {
@@ -24,11 +25,23 @@ export class BookResolver {
         @Arg('genre') genre: string,
         @Arg('authorId') authorId: string,
         @Ctx() context: MyContext
-    ) {
-        const repo = context.em.getRepository(Book)
-        const book = repo.create({ name, genre, authorId: authorId })
-        await context.em.persistAndFlush(book)
-        return book
+    ): Promise<Book | null> {
+        // create book
+        const bookRepo = context.em.getRepository(Book)
+        const book = bookRepo.create({ name, genre })
+
+        // associate author to book
+        const authorRepo = context.em.getRepository(Author)
+        const author = await authorRepo.findOne({ id: authorId })
+
+        if (author !== null) {
+            book.author = author
+            await context.em.persistAndFlush(book)
+            return book
+        }
+        else {
+            return null
+        }
     }
 
     @Mutation(() => Book, { nullable: true })
@@ -36,16 +49,11 @@ export class BookResolver {
         @Arg('id') id: string,
         @Ctx() context: MyContext
     ): Promise<Book | null> {
-        try {
-            const book = await context.em.findOne(Book, { id })
-            if (book) {
-                await context.em.remove(Book, { id })
-                return book
-            }
-            return null
-        } catch (e) {
-            console.log(e)
-            return null
+        const book = await context.em.findOne(Book, { id })
+        if (book) {
+            await context.em.remove(Book, { id })
+            return book
         }
+        return null
     }
 }

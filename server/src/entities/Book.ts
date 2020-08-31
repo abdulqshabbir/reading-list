@@ -1,6 +1,7 @@
-import { Entity, PrimaryKey, SerializedPrimaryKey, Property } from 'mikro-orm'
+import { Entity, PrimaryKey, SerializedPrimaryKey, Property, ManyToOne } from 'mikro-orm'
 import { ObjectId } from 'mongodb'
 import { ObjectType, Field } from 'type-graphql'
+import { Author } from './Author';
 
 @ObjectType()
 @Entity() // database table
@@ -14,7 +15,7 @@ export class Book {
     id!: string;
 
     @Field(() => Date) // graphql field
-    @Property() // database field
+    @Property()
     createdAt = new Date();
 
     @Field(() => Date)
@@ -30,6 +31,6 @@ export class Book {
     genre!: string;
 
     @Field()
-    @Property()
-    authorId!: string;
+    @ManyToOne(() => Author)
+    author!: Author;
 }

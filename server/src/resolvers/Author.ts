@@ -1,6 +1,7 @@
 import { Resolver, Mutation, Query, Arg, Ctx } from 'type-graphql'
 import { Author } from '../entities/Author'
 import { MyContext } from 'src/types'
+import { Book } from '../entities/Book'
 
 @Resolver()
 export class AuthorResolver {
@@ -30,6 +31,7 @@ export class AuthorResolver {
         const repo = context.em.getRepository(Author)
         const author = repo.create({ name, age })
         await context.em.persistAndFlush(author)
+        const book = new Book()
         return author
     }
 

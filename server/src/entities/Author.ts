@@ -1,6 +1,7 @@
-import { Entity, PrimaryKey, SerializedPrimaryKey, Property } from 'mikro-orm'
+import { Entity, PrimaryKey, SerializedPrimaryKey, Property, OneToMany, Collection } from 'mikro-orm'
 import { ObjectId } from 'mongodb'
 import { ObjectType, Field } from 'type-graphql'
+import { Book } from './Book';
 
 @ObjectType()
 @Entity() // database table
@@ -28,4 +29,8 @@ export class Author {
     @Field()
     @Property()
     age!: number;
+
+    @Field(() => [Book])
+    @OneToMany({ entity: () => Book, mappedBy: 'author', orphanRemoval: true })
+    books = new Collection<Book>(this)
 }
