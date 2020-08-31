@@ -51,7 +51,7 @@ export class BookResolver {
     ): Promise<Book | null> {
         const book = await context.em.findOne(Book, { id })
         if (book) {
-            await context.em.remove(Book, { id })
+            await context.em.remove(Book, { id }, true)
             return book
         }
         return null
