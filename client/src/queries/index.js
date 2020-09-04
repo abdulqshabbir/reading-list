@@ -19,7 +19,7 @@ export const GET_BOOKS = gql`
 `;
 
 export const GET_BOOK = gql`
-  query($id: ID!) {
+  query($id: String!) {
     book(id: $id) {
       id
       name
@@ -38,7 +38,7 @@ export const GET_BOOK = gql`
 `;
 
 export const CREATE_BOOK_MUTATION = gql`
-  mutation($name: String!, $genre: String!, $authorId: ID!) {
+  mutation($name: String!, $genre: String!, $authorId: String!) {
     createBook(name: $name, genre: $genre, authorId: $authorId) {
       name
       id
@@ -47,7 +47,7 @@ export const CREATE_BOOK_MUTATION = gql`
 `;
 
 export const DELETE_BOOK_MUTATION = gql`
-  mutation($id: ID!) {
+  mutation($id: String!) {
     deleteBook(id: $id) {
       name
       id

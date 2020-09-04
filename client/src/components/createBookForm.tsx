@@ -5,12 +5,19 @@ import { Form, Button } from "semantic-ui-react";
 import styles from "./createBookForm.module.css";
 import Author from "../types/author";
 
+type TData = any;
+interface TVariables {
+  name: string;
+  genre: string;
+  authorId: string;
+}
+
 function CreateBookForm() {
   const [name, setName] = useState("");
   const [genre, setGenre] = useState("");
-  const [authorId, setAuthorId] = useState<string>("");
+  const [authorId, setAuthorId] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [addBook] = useMutation(CREATE_BOOK_MUTATION);
+  const [addBook] = useMutation<TData, TVariables>(CREATE_BOOK_MUTATION);
 
   return (
     <div className={styles.formContainer}>
@@ -20,7 +27,15 @@ function CreateBookForm() {
         onSubmit={(e) => {
           e.preventDefault();
           if (authorId !== "" && name !== "" && genre !== "") {
-            SubmitForm(e, name, genre, authorId, addBook);
+            // SubmitForm(e, name, genre, authorId, addBook);
+            addBook({
+              variables: {
+                name,
+                genre,
+                authorId,
+              },
+              refetchQueries: [{ query: GET_BOOKS }],
+            });
             setGenre("");
             setAuthorId("");
             setName("");
@@ -98,6 +113,9 @@ function SubmitForm(
   authorId: string,
   addBook: any
 ) {
+  console.log("name", name);
+  console.log("genre", genre);
+  console.log("authorId", authorId);
   addBook({
     variables: {
       name,
