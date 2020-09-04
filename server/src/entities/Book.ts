@@ -7,14 +7,14 @@ import { Author } from './Author';
 @Entity() // database table
 export class Book {
 
-    @PrimaryKey() // database field only
+    @PrimaryKey()
     _id!: ObjectId;
 
-    @Field() // exposes graphql schema
+    @Field()
     @SerializedPrimaryKey()
     id!: string;
 
-    @Field(() => Date) // graphql field
+    @Field(() => Date)
     @Property()
     createdAt = new Date();
 
