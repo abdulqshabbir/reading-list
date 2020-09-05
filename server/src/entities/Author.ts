@@ -14,14 +14,6 @@ export class Author {
     @SerializedPrimaryKey()
     id!: string;
 
-    @Field(() => Date) // graphql field
-    @Property() // database field
-    createdAt = new Date();
-
-    @Field(() => Date)
-    @Property({ onUpdate: () => new Date() })
-    updatedAt = new Date();
-
     @Field()
     @Property()
     name!: string;

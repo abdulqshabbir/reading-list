@@ -14,14 +14,6 @@ export class Book {
     @SerializedPrimaryKey()
     id!: string;
 
-    @Field(() => Date)
-    @Property()
-    createdAt = new Date();
-
-    @Field(() => Date)
-    @Property({ onUpdate: () => new Date() })
-    updatedAt = new Date();
-
     @Field()
     @Property()
     name!: string;

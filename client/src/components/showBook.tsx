@@ -4,12 +4,12 @@ import { GET_BOOK } from "../queries";
 import Book from "../types/book";
 import { Dimmer, Loader } from "semantic-ui-react";
 
-function BookDetails({ id }: Props) {
-  const { loading, error, data } = useQuery<QueryData, QueryVariables>(
-    GET_BOOK,
-    { variables: { id: id } }
-  );
-  if (loading || error)
+function BookDetails({ bookId }: Props) {
+  const { loading, error, data } = useQuery<Book, BookVariables>(GET_BOOK, {
+    variables: { id: bookId },
+  });
+
+  if (loading) {
     return (
       <div id="book-details-container">
         <Dimmer active>
@@ -17,19 +17,21 @@ function BookDetails({ id }: Props) {
         </Dimmer>
       </div>
     );
+  }
+  if (error) {
+    return (
+      <div>
+        <p>There was an error fetching data...</p>
+      </div>
+    );
+  }
   if (data) {
-    const { book } = data;
     return (
       <div id="book-details-container">
-        <h2>{book.name}</h2>
-        <p>{book.genre}</p>
-        <p>{book.author.name}</p>
+        <h2>{data.name}</h2>
+        <p>{data.genre}</p>
+        <p>{data.author.name}</p>
         <p>All books by this author:</p>
-        <ul className="other-books">
-          {book.author.books.map((book) => (
-            <li key={book.id}>{book.name}</li>
-          ))}
-        </ul>
       </div>
     );
   } else {
@@ -38,14 +40,10 @@ function BookDetails({ id }: Props) {
 }
 
 interface Props {
-  id: string;
+  bookId: string;
 }
 
-interface QueryData {
-  book: Book;
-}
-
-interface QueryVariables {
+interface BookVariables {
   id: string;
 }
 

@@ -106,23 +106,4 @@ function AuthorOptions() {
   );
 }
 
-function SubmitForm(
-  e: React.FormEvent<HTMLFormElement>,
-  name: string,
-  genre: string,
-  authorId: string,
-  addBook: any
-) {
-  console.log("name", name);
-  console.log("genre", genre);
-  console.log("authorId", authorId);
-  addBook({
-    variables: {
-      name,
-      genre,
-      authorId,
-    },
-    refetchQueries: [{ query: GET_BOOKS }],
-  });
-}
 export default CreateBookForm;

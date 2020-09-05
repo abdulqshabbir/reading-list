@@ -11,7 +11,8 @@ function BookList() {
   const [deleteBook] = useMutation<TMutationData, TMutationVariables>(
     DELETE_BOOK_MUTATION
   );
-  const [bookId, setBookId] = useState<string | null>(null);
+  const [bookId, setBookId] = useState<null | string>(null);
+  const [authorId, setAuthorId] = useState<null | string>(null);
 
   if (loading)
     return (
@@ -23,8 +24,6 @@ function BookList() {
     );
 
   if (error || data === undefined) {
-    console.log("error", error);
-    console.log("data", data);
     return "Sorry your books could not be found.";
   }
   if (data.books.length === 0)
@@ -63,7 +62,7 @@ function BookList() {
           </div>
         ))}
       </ul>
-      {bookId !== null ? <BookDetails id={bookId} /> : null}
+      {bookId !== null ? <BookDetails bookId={bookId} /> : null}
     </div>
   );
 }
