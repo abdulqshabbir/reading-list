@@ -9,7 +9,16 @@ export class AuthorResolver {
         @Arg('id') id: string,
         @Ctx() context: MyContext
     ) {
+        console.log('inside author resolver!')
         const author = await context.em.findOne(Author, { id })
+
+        await author?.books.init()
+
+        for (const book of author!.books) {
+            console.log(book.name)
+            author?.books.add(book)
+        }
+
         return author
     }
 

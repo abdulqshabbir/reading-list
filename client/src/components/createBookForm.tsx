@@ -1,16 +1,9 @@
 import React, { useState } from "react";
-import { useQuery, useMutation } from "@apollo/client";
-import { GET_AUTHORS, CREATE_BOOK_MUTATION, GET_BOOKS } from "../queries";
+import { useMutation } from "@apollo/client";
+import { CREATE_BOOK_MUTATION, GET_BOOKS } from "../queries";
 import { Form, Button } from "semantic-ui-react";
 import styles from "./createBookForm.module.css";
-import Author from "../types/author";
-
-type TData = any;
-interface TVariables {
-  name: string;
-  genre: string;
-  authorId: string;
-}
+import { AuthorOptions } from "./AuthorOptions/AuthorOptions";
 
 function CreateBookForm() {
   const [name, setName] = useState("");
@@ -85,44 +78,11 @@ function CreateBookForm() {
   );
 }
 
-interface TAuthors {
-  authors: Author[];
-}
-function AuthorOptions() {
-  const { loading, data } = useQuery<TAuthors>(GET_AUTHORS);
-
-  if (loading) return <option disabled>Loading Authors...</option>;
-
-  if (!data) return <option disabled>Error Fetching Authors...</option>;
-
-  return (
-    <React.Fragment>
-      {data.authors.map((author) => (
-        <option key={author.id} value={author.id}>
-          {author.name}
-        </option>
-      ))}
-    </React.Fragment>
-  );
+type TData = any;
+interface TVariables {
+  name: string;
+  genre: string;
+  authorId: string;
 }
 
-function SubmitForm(
-  e: React.FormEvent<HTMLFormElement>,
-  name: string,
-  genre: string,
-  authorId: string,
-  addBook: any
-) {
-  console.log("name", name);
-  console.log("genre", genre);
-  console.log("authorId", authorId);
-  addBook({
-    variables: {
-      name,
-      genre,
-      authorId,
-    },
-    refetchQueries: [{ query: GET_BOOKS }],
-  });
-}
 export default CreateBookForm;

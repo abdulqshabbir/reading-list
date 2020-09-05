@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_BOOKS, DELETE_BOOK_MUTATION } from "../queries";
-import BookDetails from "./showBook";
+import { GET_BOOKS, DELETE_BOOK_MUTATION } from "../../queries";
+import ShowBook from "../ShowBook/showBook";
 import { Loader } from "semantic-ui-react";
 import styles from "./listBooks.module.css";
-import Book from "../types/book";
+import Book from "../../types/book";
 
 function BookList() {
   const { loading, error, data } = useQuery<TQueryData>(GET_BOOKS);
@@ -63,7 +63,7 @@ function BookList() {
           </div>
         ))}
       </ul>
-      {bookId !== null ? <BookDetails id={bookId} /> : null}
+      {bookId !== null ? <ShowBook id={bookId} /> : null}
     </div>
   );
 }
