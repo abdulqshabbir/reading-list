@@ -22,7 +22,7 @@ export const GET_BOOKS_BY_AUTHOR = gql`
 `;
 
 export const GET_BOOK = gql`
-  query($id: ID!) {
+  query($id: String!) {
     book(id: $id) {
       id
       name

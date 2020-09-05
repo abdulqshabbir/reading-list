@@ -12,7 +12,6 @@ function BookList() {
     DELETE_BOOK_MUTATION
   );
   const [bookId, setBookId] = useState<null | string>(null);
-  const [authorId, setAuthorId] = useState<null | string>(null);
 
   if (loading)
     return (
@@ -62,11 +61,7 @@ function BookList() {
           </div>
         ))}
       </ul>
-<<<<<<< HEAD:client/src/components/Books/listBooks.tsx
       {bookId !== null ? <ShowBook id={bookId} /> : null}
-=======
-      {bookId !== null ? <BookDetails bookId={bookId} /> : null}
->>>>>>> 49765e9e5d26113238e4c2d3b1bf236e5776cabb:client/src/components/listBooks.tsx
     </div>
   );
 }

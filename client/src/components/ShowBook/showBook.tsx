@@ -32,7 +32,7 @@ function ShowBook({ id }: Props) {
         <p>{book.genre}</p>
         <p>{book.author.name}</p>
         <p>
-          {book.author.books.map((b) => (
+          {book.author.books.map((b: Book) => (
             <li key={b.id}>{b.name}</li>
           ))}
         </p>
@@ -69,6 +69,7 @@ const GET_BOOK = gql`
         id
         name
         books {
+          id
           name
         }
       }
