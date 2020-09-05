@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuery, gql, useLazyQuery } from "@apollo/client";
+import { useQuery, gql } from "@apollo/client";
 import { Dimmer, Loader } from "semantic-ui-react";
 import Book from "../../types/book";
 import Author from "../../types/author";
